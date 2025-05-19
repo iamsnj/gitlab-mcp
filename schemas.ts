@@ -22,27 +22,33 @@ export const GitLabPipelineSchema = z.object({
   started_at: z.string().nullable().optional(),
   finished_at: z.string().nullable().optional(),
   coverage: z.number().nullable().optional(),
-  user: z.object({
-    id: z.number(),
-    name: z.string(),
-    username: z.string(),
-    avatar_url: z.string().nullable().optional(),
-  }).optional(),
-  detailed_status: z.object({
-    icon: z.string().optional(),
-    text: z.string().optional(),
-    label: z.string().optional(),
-    group: z.string().optional(),
-    tooltip: z.string().optional(),
-    has_details: z.boolean().optional(),
-    details_path: z.string().optional(),
-    illustration: z.object({
-      image: z.string().optional(),
-      size: z.string().optional(),
-      title: z.string().optional(),
-    }).optional(),
-    favicon: z.string().optional(),
-  }).optional(),
+  user: z
+    .object({
+      id: z.number(),
+      name: z.string(),
+      username: z.string(),
+      avatar_url: z.string().nullable().optional(),
+    })
+    .optional(),
+  detailed_status: z
+    .object({
+      icon: z.string().optional(),
+      text: z.string().optional(),
+      label: z.string().optional(),
+      group: z.string().optional(),
+      tooltip: z.string().optional(),
+      has_details: z.boolean().optional(),
+      details_path: z.string().optional(),
+      illustration: z
+        .object({
+          image: z.string().optional(),
+          size: z.string().optional(),
+          title: z.string().optional(),
+        })
+        .optional(),
+      favicon: z.string().optional(),
+    })
+    .optional(),
 });
 
 // Pipeline job related schemas
@@ -58,44 +64,86 @@ export const GitLabPipelineJobSchema = z.object({
   started_at: z.string().nullable().optional(),
   finished_at: z.string().nullable().optional(),
   duration: z.number().nullable().optional(),
-  user: z.object({
-    id: z.number(),
-    name: z.string(),
-    username: z.string(),
-    avatar_url: z.string().nullable().optional(),
-  }).optional(),
-  commit: z.object({
-    id: z.string(),
-    short_id: z.string(),
-    title: z.string(),
-    author_name: z.string(),
-    author_email: z.string(),
-  }).optional(),
-  pipeline: z.object({
-    id: z.number(),
-    project_id: z.number(),
-    status: z.string(),
-    ref: z.string(),
-    sha: z.string(),
-  }).optional(),
+  user: z
+    .object({
+      id: z.number(),
+      name: z.string(),
+      username: z.string(),
+      avatar_url: z.string().nullable().optional(),
+    })
+    .optional(),
+  commit: z
+    .object({
+      id: z.string(),
+      short_id: z.string(),
+      title: z.string(),
+      author_name: z.string(),
+      author_email: z.string(),
+    })
+    .optional(),
+  pipeline: z
+    .object({
+      id: z.number(),
+      project_id: z.number(),
+      status: z.string(),
+      ref: z.string(),
+      sha: z.string(),
+    })
+    .optional(),
   web_url: z.string().optional(),
 });
 
 // Schema for listing pipelines
 export const ListPipelinesSchema = z.object({
   project_id: z.string().describe("Project ID or URL-encoded path"),
-  scope: z.enum(['running', 'pending', 'finished', 'branches', 'tags']).optional().describe("The scope of pipelines"),
-  status: z.enum(['created', 'waiting_for_resource', 'preparing', 'pending', 'running', 'success', 'failed', 'canceled', 'skipped', 'manual', 'scheduled']).optional().describe("The status of pipelines"),
+  scope: z
+    .enum(["running", "pending", "finished", "branches", "tags"])
+    .optional()
+    .describe("The scope of pipelines"),
+  status: z
+    .enum([
+      "created",
+      "waiting_for_resource",
+      "preparing",
+      "pending",
+      "running",
+      "success",
+      "failed",
+      "canceled",
+      "skipped",
+      "manual",
+      "scheduled",
+    ])
+    .optional()
+    .describe("The status of pipelines"),
   ref: z.string().optional().describe("The ref of pipelines"),
   sha: z.string().optional().describe("The SHA of pipelines"),
-  yaml_errors: z.boolean().optional().describe("Returns pipelines with invalid configurations"),
-  username: z.string().optional().describe("The username of the user who triggered pipelines"),
-  updated_after: z.string().optional().describe("Return pipelines updated after the specified date"),
-  updated_before: z.string().optional().describe("Return pipelines updated before the specified date"),
-  order_by: z.enum(['id', 'status', 'ref', 'updated_at', 'user_id']).optional().describe("Order pipelines by"),
-  sort: z.enum(['asc', 'desc']).optional().describe("Sort pipelines"),
+  yaml_errors: z
+    .boolean()
+    .optional()
+    .describe("Returns pipelines with invalid configurations"),
+  username: z
+    .string()
+    .optional()
+    .describe("The username of the user who triggered pipelines"),
+  updated_after: z
+    .string()
+    .optional()
+    .describe("Return pipelines updated after the specified date"),
+  updated_before: z
+    .string()
+    .optional()
+    .describe("Return pipelines updated before the specified date"),
+  order_by: z
+    .enum(["id", "status", "ref", "updated_at", "user_id"])
+    .optional()
+    .describe("Order pipelines by"),
+  sort: z.enum(["asc", "desc"]).optional().describe("Sort pipelines"),
   page: z.number().optional().describe("Page number for pagination"),
-  per_page: z.number().optional().describe("Number of items per page (max 100)"),
+  per_page: z
+    .number()
+    .optional()
+    .describe("Number of items per page (max 100)"),
 });
 
 // Schema for getting a specific pipeline
@@ -108,10 +156,28 @@ export const GetPipelineSchema = z.object({
 export const ListPipelineJobsSchema = z.object({
   project_id: z.string().describe("Project ID or URL-encoded path"),
   pipeline_id: z.number().describe("The ID of the pipeline"),
-  scope: z.enum(['created', 'pending', 'running', 'failed', 'success', 'canceled', 'skipped', 'manual']).optional().describe("The scope of jobs to show"),
-  include_retried: z.boolean().optional().describe("Whether to include retried jobs"),
+  scope: z
+    .enum([
+      "created",
+      "pending",
+      "running",
+      "failed",
+      "success",
+      "canceled",
+      "skipped",
+      "manual",
+    ])
+    .optional()
+    .describe("The scope of jobs to show"),
+  include_retried: z
+    .boolean()
+    .optional()
+    .describe("Whether to include retried jobs"),
   page: z.number().optional().describe("Page number for pagination"),
-  per_page: z.number().optional().describe("Number of items per page (max 100)"),
+  per_page: z
+    .number()
+    .optional()
+    .describe("Number of items per page (max 100)"),
 });
 
 // Schema for the input parameters for pipeline job operations
@@ -555,7 +621,7 @@ export const GitLabDiscussionNoteSchema = z.object({
           }),
           end: z.object({
             line_code: z.string(),
-            type: z.enum(["new", "old", "expanded"]),
+            type: z.enum(["new", "old", "expanded"]).nullable(),
             old_line: z.number().nullable(),
             new_line: z.number().nullable(),
           }),
@@ -590,18 +656,23 @@ export const UpdateMergeRequestNoteSchema = ProjectParamsSchema.extend({
   note_id: z.number().describe("The ID of a thread note"),
   body: z.string().optional().describe("The content of the note or reply"),
   resolved: z.boolean().optional().describe("Resolve or unresolve the note"),
-}).refine(data => data.body !== undefined || data.resolved !== undefined, {
-  message: "At least one of 'body' or 'resolved' must be provided"
-}).refine(data => !(data.body !== undefined && data.resolved !== undefined), {
-  message: "Only one of 'body' or 'resolved' can be provided, not both"
-});
+})
+  .refine((data) => data.body !== undefined || data.resolved !== undefined, {
+    message: "At least one of 'body' or 'resolved' must be provided",
+  })
+  .refine((data) => !(data.body !== undefined && data.resolved !== undefined), {
+    message: "Only one of 'body' or 'resolved' can be provided, not both",
+  });
 
 // Input schema for adding a note to an existing merge request discussion
 export const CreateMergeRequestNoteSchema = ProjectParamsSchema.extend({
   merge_request_iid: z.number().describe("The IID of a merge request"),
   discussion_id: z.string().describe("The ID of a thread"),
   body: z.string().describe("The content of the note or reply"),
-  created_at: z.string().optional().describe("Date the note was created at (ISO 8601 format)"),
+  created_at: z
+    .string()
+    .optional()
+    .describe("Date the note was created at (ISO 8601 format)"),
 });
 
 // Input schema for updating an issue discussion note
@@ -617,7 +688,10 @@ export const CreateIssueNoteSchema = ProjectParamsSchema.extend({
   issue_iid: z.number().describe("The IID of an issue"),
   discussion_id: z.string().describe("The ID of a thread"),
   body: z.string().describe("The content of the note or reply"),
-  created_at: z.string().optional().describe("Date the note was created at (ISO 8601 format)"),
+  created_at: z
+    .string()
+    .optional()
+    .describe("Date the note was created at (ISO 8601 format)"),
 });
 
 // API Operation Parameter Schemas
@@ -891,8 +965,18 @@ export const ListIssueDiscussionsSchema = z.object({
   issue_iid: z.number().describe("The internal ID of the project issue"),
   page: z.number().optional().describe("Page number for pagination"),
   per_page: z.number().optional().describe("Number of items per page"),
-  sort: z.enum(["asc", "desc"]).optional().describe("Return issue discussions sorted in ascending or descending order"),
-  order_by: z.enum(["created_at", "updated_at"]).optional().describe("Return issue discussions ordered by created_at or updated_at fields"),
+  sort: z
+    .enum(["asc", "desc"])
+    .optional()
+    .describe(
+      "Return issue discussions sorted in ascending or descending order"
+    ),
+  order_by: z
+    .enum(["created_at", "updated_at"])
+    .optional()
+    .describe(
+      "Return issue discussions ordered by created_at or updated_at fields"
+    ),
 });
 
 export const GetIssueLinkSchema = z.object({
@@ -1158,24 +1242,67 @@ export const GitLabWikiPageSchema = z.object({
 export const MergeRequestThreadPositionSchema = z.object({
   base_sha: z.string().describe("Base commit SHA in the source branch"),
   head_sha: z.string().describe("SHA referencing HEAD of the source branch"),
-  start_sha: z.string().describe("SHA referencing the start commit of the source branch"),
-  position_type: z.enum(["text", "image", "file"]).describe("Type of position reference"),
+  start_sha: z
+    .string()
+    .describe("SHA referencing the start commit of the source branch"),
+  position_type: z
+    .enum(["text", "image", "file"])
+    .describe("Type of position reference"),
   new_path: z.string().optional().describe("File path after change"),
   old_path: z.string().optional().describe("File path before change"),
-  new_line: z.number().nullable().optional().describe("Line number after change"),
-  old_line: z.number().nullable().optional().describe("Line number before change"),
+  new_line: z
+    .number()
+    .nullable()
+    .optional()
+    .describe("Line number after change"),
+  old_line: z
+    .number()
+    .nullable()
+    .optional()
+    .describe("Line number before change"),
   width: z.number().optional().describe("Width of the image (for image diffs)"),
-  height: z.number().optional().describe("Height of the image (for image diffs)"),
-  x: z.number().optional().describe("X coordinate on the image (for image diffs)"),
-  y: z.number().optional().describe("Y coordinate on the image (for image diffs)"),
+  height: z
+    .number()
+    .optional()
+    .describe("Height of the image (for image diffs)"),
+  x: z
+    .number()
+    .optional()
+    .describe("X coordinate on the image (for image diffs)"),
+  y: z
+    .number()
+    .optional()
+    .describe("Y coordinate on the image (for image diffs)"),
+  line_range: z
+    .object({
+      start: z.object({
+        line_code: z.string().optional(),
+        type: z.enum(["new", "old"]),
+        old_line: z.number().nullable(),
+        new_line: z.number().nullable(),
+      }),
+      end: z.object({
+        line_code: z.string().optional(),
+        type: z.enum(["new", "old"]),
+        old_line: z.number().nullable(),
+        new_line: z.number().nullable(),
+      }),
+    })
+    .optional()
+    .describe("Line range for the diff note"),
 });
 
 // Schema for creating a new merge request thread
 export const CreateMergeRequestThreadSchema = ProjectParamsSchema.extend({
   merge_request_iid: z.number().describe("The IID of a merge request"),
   body: z.string().describe("The content of the thread"),
-  position: MergeRequestThreadPositionSchema.optional().describe("Position when creating a diff note"),
-  created_at: z.string().optional().describe("Date the thread was created at (ISO 8601 format)"),
+  position: MergeRequestThreadPositionSchema.optional().describe(
+    "Position when creating a diff note"
+  ),
+  created_at: z
+    .string()
+    .optional()
+    .describe("Date the thread was created at (ISO 8601 format)"),
 });
 
 // Export types
@@ -1213,7 +1340,9 @@ export type GitLabMergeRequestDiff = z.infer<
 >;
 export type CreateNoteOptions = z.infer<typeof CreateNoteSchema>;
 export type GitLabIssueLink = z.infer<typeof GitLabIssueLinkSchema>;
-export type ListIssueDiscussionsOptions = z.infer<typeof ListIssueDiscussionsSchema>;
+export type ListIssueDiscussionsOptions = z.infer<
+  typeof ListIssueDiscussionsSchema
+>;
 export type UpdateIssueNoteOptions = z.infer<typeof UpdateIssueNoteSchema>;
 export type CreateIssueNoteOptions = z.infer<typeof CreateIssueNoteSchema>;
 export type GitLabNamespace = z.infer<typeof GitLabNamespaceSchema>;
@@ -1230,9 +1359,15 @@ export type DeleteWikiPageOptions = z.infer<typeof DeleteWikiPageSchema>;
 export type GitLabWikiPage = z.infer<typeof GitLabWikiPageSchema>;
 export type GitLabTreeItem = z.infer<typeof GitLabTreeItemSchema>;
 export type GetRepositoryTreeOptions = z.infer<typeof GetRepositoryTreeSchema>;
-export type MergeRequestThreadPosition = z.infer<typeof MergeRequestThreadPositionSchema>;
-export type CreateMergeRequestThreadOptions = z.infer<typeof CreateMergeRequestThreadSchema>;
-export type CreateMergeRequestNoteOptions = z.infer<typeof CreateMergeRequestNoteSchema>;
+export type MergeRequestThreadPosition = z.infer<
+  typeof MergeRequestThreadPositionSchema
+>;
+export type CreateMergeRequestThreadOptions = z.infer<
+  typeof CreateMergeRequestThreadSchema
+>;
+export type CreateMergeRequestNoteOptions = z.infer<
+  typeof CreateMergeRequestNoteSchema
+>;
 export type GitLabPipelineJob = z.infer<typeof GitLabPipelineJobSchema>;
 export type GitLabPipeline = z.infer<typeof GitLabPipelineSchema>;
 export type ListPipelinesOptions = z.infer<typeof ListPipelinesSchema>;

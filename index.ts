@@ -6,134 +6,125 @@ import {
   CallToolRequestSchema,
   ListToolsRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
-import FormData from "form-data";
-import fetch from "node-fetch";
-import { SocksProxyAgent } from "socks-proxy-agent";
-import { HttpsProxyAgent } from "https-proxy-agent";
+import fs from "fs";
 import { HttpProxyAgent } from "http-proxy-agent";
+import { HttpsProxyAgent } from "https-proxy-agent";
+import fetch from "node-fetch";
+import path, { dirname } from "path";
+import { SocksProxyAgent } from "socks-proxy-agent";
+import { fileURLToPath, URL } from "url";
 import { z } from "zod";
 import { zodToJsonSchema } from "zod-to-json-schema";
-import { fileURLToPath } from "url";
-import { dirname } from "path";
-import fs from "fs";
-import path from "path";
 // Add type imports for proxy agents
 import { Agent } from "http";
-import { URL } from "url";
 
 import {
-  GitLabForkSchema,
-  GitLabReferenceSchema,
-  GitLabRepositorySchema,
-  GitLabIssueSchema,
-  GitLabMergeRequestSchema,
-  GitLabContentSchema,
-  GitLabCreateUpdateFileResponseSchema,
-  GitLabSearchResponseSchema,
-  GitLabTreeSchema,
-  GitLabCommitSchema,
-  GitLabNamespaceSchema,
-  GitLabNamespaceExistsResponseSchema,
-  GitLabProjectSchema,
-  GitLabLabelSchema,
-  CreateRepositoryOptionsSchema,
-  CreateIssueOptionsSchema,
-  CreateMergeRequestOptionsSchema,
   CreateBranchOptionsSchema,
-  CreateOrUpdateFileSchema,
-  SearchRepositoriesSchema,
-  CreateRepositorySchema,
-  GetFileContentsSchema,
-  PushFilesSchema,
-  CreateIssueSchema,
-  CreateMergeRequestSchema,
-  ForkRepositorySchema,
   CreateBranchSchema,
-  GitLabMergeRequestDiffSchema,
-  GetMergeRequestSchema,
-  GetMergeRequestDiffsSchema,
-  UpdateMergeRequestSchema,
-  ListIssuesSchema,
-  GetIssueSchema,
-  UpdateIssueSchema,
-  DeleteIssueSchema,
-  GitLabIssueLinkSchema,
-  GitLabIssueWithLinkDetailsSchema,
-  ListIssueLinksSchema,
-  ListIssueDiscussionsSchema,
-  GetIssueLinkSchema,
   CreateIssueLinkSchema,
-  DeleteIssueLinkSchema,
-  ListNamespacesSchema,
-  GetNamespaceSchema,
-  VerifyNamespaceSchema,
-  GetProjectSchema,
-  ListProjectsSchema,
-  ListLabelsSchema,
-  GetLabelSchema,
-  CreateLabelSchema,
-  UpdateLabelSchema,
-  DeleteLabelSchema,
-  CreateNoteSchema,
+  CreateIssueNoteSchema,
+  CreateIssueOptionsSchema,
+  CreateIssueSchema,
+  CreateLabelSchema, // Added
+  CreateMergeRequestNoteSchema,
+  CreateMergeRequestOptionsSchema,
+  CreateMergeRequestSchema,
   CreateMergeRequestThreadSchema,
-  ListGroupProjectsSchema,
-  ListWikiPagesSchema,
-  GetWikiPageSchema,
+  CreateNoteSchema,
+  CreateOrUpdateFileSchema,
+  CreateRepositoryOptionsSchema,
+  CreateRepositorySchema,
   CreateWikiPageSchema,
-  UpdateWikiPageSchema,
+  DeleteIssueLinkSchema,
+  DeleteIssueSchema,
+  DeleteLabelSchema,
   DeleteWikiPageSchema,
-  GitLabWikiPageSchema,
-  GetRepositoryTreeSchema,
-  GitLabTreeItemSchema,
-  GitLabPipelineSchema,
-  GetPipelineSchema,
-  ListPipelinesSchema,
-  ListPipelineJobsSchema,
+  ForkRepositorySchema,
+  GetFileContentsSchema,
+  GetIssueLinkSchema,
+  GetIssueSchema,
+  GetLabelSchema,
+  GetMergeRequestDiffsSchema,
+  GetMergeRequestSchema,
+  GetNamespaceSchema,
   // pipeline job schemas
   GetPipelineJobOutputSchema,
-  GitLabPipelineJobSchema,
+  GetPipelineSchema,
+  GetProjectSchema,
+  GetRepositoryTreeSchema,
+  GetWikiPageSchema,
+  GitLabCommitSchema,
+  GitLabContentSchema,
+  GitLabCreateUpdateFileResponseSchema,
   // Discussion Schemas
   GitLabDiscussionNoteSchema, // Added
   GitLabDiscussionSchema,
-  UpdateMergeRequestNoteSchema, // Added
-  CreateMergeRequestNoteSchema, // Added
+  GitLabForkSchema,
+  GitLabIssueLinkSchema,
+  GitLabIssueSchema,
+  GitLabIssueWithLinkDetailsSchema,
+  GitLabMergeRequestDiffSchema,
+  GitLabMergeRequestSchema,
+  GitLabNamespaceExistsResponseSchema,
+  GitLabNamespaceSchema,
+  GitLabPipelineJobSchema,
+  GitLabPipelineSchema,
+  GitLabProjectSchema,
+  GitLabReference,
+  GitLabReferenceSchema,
+  GitLabRepository,
+  GitLabRepositorySchema,
+  GitLabSearchResponse,
+  GitLabSearchResponseSchema,
+  GitLabTree,
+  GitLabTreeItemSchema,
+  GitLabTreeSchema,
+  GitLabWikiPageSchema,
+  ListGroupProjectsSchema,
+  ListIssueDiscussionsSchema,
+  ListIssueLinksSchema,
+  ListIssuesSchema,
+  ListLabelsSchema, // Added
   ListMergeRequestDiscussionsSchema,
-  type GitLabFork,
-  type GitLabReference,
-  type GitLabRepository,
-  type GitLabIssue,
-  type GitLabMergeRequest,
-  type GitLabContent,
-  type GitLabCreateUpdateFileResponse,
-  type GitLabSearchResponse,
-  type GitLabTree,
-  type GitLabCommit,
+  ListNamespacesSchema,
+  ListPipelineJobsSchema,
+  ListPipelinesSchema,
+  ListProjectsSchema,
+  ListWikiPagesSchema,
+  PushFilesSchema,
+  SearchRepositoriesSchema,
+  UpdateIssueNoteSchema,
+  UpdateIssueSchema,
+  UpdateLabelSchema,
+  UpdateMergeRequestNoteSchema,
+  UpdateMergeRequestSchema,
+  UpdateWikiPageSchema,
+  VerifyNamespaceSchema,
   type FileOperation,
-  type GitLabMergeRequestDiff,
+  type GetRepositoryTreeOptions,
+  type GitLabCommit,
+  type GitLabContent,
+  type GitLabCreateUpdateFileResponse, // Added
+  type GitLabDiscussion,
+  // Discussion Types
+  type GitLabDiscussionNote,
+  type GitLabFork,
+  type GitLabIssue,
   type GitLabIssueLink,
   type GitLabIssueWithLinkDetails,
+  type GitLabLabel,
+  type GitLabMergeRequest,
+  type GitLabMergeRequestDiff,
   type GitLabNamespace,
   type GitLabNamespaceExistsResponse,
-  type GitLabProject,
-  type GitLabLabel,
   type GitLabPipeline,
-  type ListPipelinesOptions,
-  type GetPipelineOptions,
-  type ListPipelineJobsOptions,
   type GitLabPipelineJob,
-  // Discussion Types
-  type GitLabDiscussionNote, // Added
-  type GitLabDiscussion,
-  type MergeRequestThreadPosition,
-  type GetWikiPageOptions,
-  type CreateWikiPageOptions,
-  type UpdateWikiPageOptions,
-  type DeleteWikiPageOptions,
-  type GitLabWikiPage,
+  type GitLabProject,
   type GitLabTreeItem,
-  type GetRepositoryTreeOptions,
-  UpdateIssueNoteSchema,
-  CreateIssueNoteSchema,
+  type GitLabWikiPage,
+  type ListPipelineJobsOptions,
+  type ListPipelinesOptions,
+  type MergeRequestThreadPosition,
 } from "./schemas.js";
 
 /**
@@ -677,9 +668,7 @@ async function getFileContents(
   const encodedPath = encodeURIComponent(filePath);
 
   // ref가 없는 경우 default branch를 가져옴
-  if (!ref) {
-    ref = await getDefaultBranchRef(projectId);
-  }
+  ref ??= await getDefaultBranchRef(projectId);
 
   const url = new URL(
     `${GITLAB_API_URL}/projects/${encodeURIComponent(
@@ -1794,21 +1783,80 @@ async function createMergeRequestThread(
     )}/merge_requests/${mergeRequestIid}/discussions`
   );
 
-  const payload: Record<string, any> = { body };
+  url.searchParams.append("body", body);
 
-  // Add optional parameters if provided
+  const form = new URLSearchParams();
+
   if (position) {
-    payload.position = position;
+    form.append("position[position_type]", "text");
+    form.append("position[base_sha]", position.base_sha);
+    form.append("position[head_sha]", position.head_sha);
+    form.append("position[start_sha]", position.start_sha);
+
+    if (position.new_path) {
+      form.append("position[new_path]", position.new_path);
+    }
+    if (position.old_path) {
+      form.append("position[old_path]", position.old_path);
+    }
+
+    // Optional single-line position fields
+    if (position.new_line) {
+      form.append("position[new_line]", position.new_line.toString());
+    }
+    if (position.old_line) {
+      form.append("position[old_line]", position.old_line.toString());
+    }
+
+    // Optional created_at
+    if (createdAt) {
+      form.append("created_at", createdAt);
+    }
+
+    // Optional line_range block
+    if (position.line_range) {
+      const { start, end } = position.line_range;
+
+      form.append("position[line_range][start][type]", start.type);
+      if (start.new_line) {
+        form.append(
+          "position[line_range][start][new_line]",
+          start.new_line.toString()
+        );
+      }
+      if (start.old_line) {
+        form.append(
+          "position[line_range][start][old_line]",
+          start.old_line.toString()
+        );
+      }
+
+      form.append("position[line_range][end][type]", end.type);
+
+      if (end.new_line) {
+        form.append(
+          "position[line_range][end][new_line]",
+          end.new_line.toString()
+        );
+      }
+      if (end.old_line) {
+        form.append(
+          "position[line_range][end][old_line]",
+          end.old_line.toString()
+        );
+      }
+    }
   }
 
-  if (createdAt) {
-    payload.created_at = createdAt;
-  }
+  const headers = {
+    ...DEFAULT_FETCH_CONFIG.headers,
+    "Content-Type": "application/x-www-form-urlencoded",
+  };
 
   const response = await fetch(url.toString(), {
-    ...DEFAULT_FETCH_CONFIG,
+    headers,
     method: "POST",
-    body: JSON.stringify(payload),
+    body: form.toString(),
   });
 
   await handleGitLabError(response);
@@ -2386,7 +2434,9 @@ async function getPipeline(
 ): Promise<GitLabPipeline> {
   projectId = decodeURIComponent(projectId); // Decode project ID
   const url = new URL(
-    `${GITLAB_API_URL}/projects/${encodeURIComponent(projectId)}/pipelines/${pipelineId}`
+    `${GITLAB_API_URL}/projects/${encodeURIComponent(
+      projectId
+    )}/pipelines/${pipelineId}`
   );
 
   const response = await fetch(url.toString(), {
@@ -2417,7 +2467,9 @@ async function listPipelineJobs(
 ): Promise<GitLabPipelineJob[]> {
   projectId = decodeURIComponent(projectId); // Decode project ID
   const url = new URL(
-    `${GITLAB_API_URL}/projects/${encodeURIComponent(projectId)}/pipelines/${pipelineId}/jobs`
+    `${GITLAB_API_URL}/projects/${encodeURIComponent(
+      projectId
+    )}/pipelines/${pipelineId}/jobs`
   );
 
   // Add all query parameters
@@ -2449,9 +2501,7 @@ async function getPipelineJob(
 ): Promise<GitLabPipelineJob> {
   projectId = decodeURIComponent(projectId); // Decode project ID
   const url = new URL(
-    `${GITLAB_API_URL}/projects/${encodeURIComponent(
-      projectId
-    )}/jobs/${jobId}`
+    `${GITLAB_API_URL}/projects/${encodeURIComponent(projectId)}/jobs/${jobId}`
   );
 
   const response = await fetch(url.toString(), {
@@ -2619,9 +2669,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       case "create_branch": {
         const args = CreateBranchSchema.parse(request.params.arguments);
         let ref = args.ref;
-        if (!ref) {
-          ref = await getDefaultBranchRef(args.project_id);
-        }
+        ref ??= await getDefaultBranchRef(args.project_id);
 
         const branch = await createBranch(args.project_id, {
           name: args.branch,
@@ -3256,9 +3304,8 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       }
 
       case "list_pipeline_jobs": {
-        const { project_id, pipeline_id, ...options } = ListPipelineJobsSchema.parse(
-          request.params.arguments
-        );
+        const { project_id, pipeline_id, ...options } =
+          ListPipelineJobsSchema.parse(request.params.arguments);
         const jobs = await listPipelineJobs(project_id, pipeline_id, options);
         return {
           content: [
