@@ -609,20 +609,20 @@ export const GitLabDiscussionNoteSchema = z.object({
       old_path: z.string(),
       new_path: z.string(),
       position_type: z.enum(["text", "image", "file"]),
-      old_line: z.number().nullable(),
+      old_line: z.number().nullable().optional(),
       new_line: z.number().nullable(),
       line_range: z
         .object({
           start: z.object({
             line_code: z.string(),
             type: z.enum(["new", "old", "expanded"]),
-            old_line: z.number().nullable(),
+            old_line: z.number().nullable().optional(),
             new_line: z.number().nullable(),
           }),
           end: z.object({
             line_code: z.string(),
             type: z.enum(["new", "old", "expanded"]).nullable(),
-            old_line: z.number().nullable(),
+            old_line: z.number().nullable().optional(),
             new_line: z.number().nullable(),
           }),
         })
@@ -1278,13 +1278,13 @@ export const MergeRequestThreadPositionSchema = z.object({
       start: z.object({
         line_code: z.string().optional(),
         type: z.enum(["new", "old"]),
-        old_line: z.number().nullable(),
+        old_line: z.number().nullable().optional(),
         new_line: z.number().nullable(),
       }),
       end: z.object({
         line_code: z.string().optional(),
         type: z.enum(["new", "old"]),
-        old_line: z.number().nullable(),
+        old_line: z.number().nullable().optional(),
         new_line: z.number().nullable(),
       }),
     })
