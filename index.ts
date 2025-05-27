@@ -84,7 +84,7 @@ import {
   ListIssueDiscussionsSchema,
   ListIssueLinksSchema,
   ListIssuesSchema,
-  ListLabelsSchema, // Added
+  ListLabelsSchema,
   ListMergeRequestDiscussionsSchema,
   ListNamespacesSchema,
   ListPipelineJobsSchema,
@@ -104,7 +104,7 @@ import {
   type GetRepositoryTreeOptions,
   type GitLabCommit,
   type GitLabContent,
-  type GitLabCreateUpdateFileResponse, // Added
+  type GitLabCreateUpdateFileResponse,
   type GitLabDiscussion,
   // Discussion Types
   type GitLabDiscussionNote,
